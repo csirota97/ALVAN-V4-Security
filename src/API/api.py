@@ -18,15 +18,24 @@ except:
     'homeId': None,
     'registered': False,
   }
-  
+  homeId = None
+  registered = False
+
   with open('data.pickle', 'wb') as f:
     pickle.dump(data, f)
 
 print(deviceKey)
 app = Flask(__name__)
 CORS(app)
-camera=cv2.VideoCapture(0)
+
+try:
+  camera=cv2.VideoCapture(0)
+  print("Camera Started")
+except:
+  print("Could not start camera")
+
 hostname = socket.gethostbyname(socket.gethostname())
+hostname = "192.168.1.169"
 
 def generate_frames():
   while True:
@@ -39,8 +48,6 @@ def generate_frames():
       # return frame
 
     yield(b'--frame\r\n' b'Content-Type: image/png\r\n\r\n' + frame + b'\r\n')
-      
-
 
 @app.route("/")
 def index():
@@ -72,7 +79,7 @@ def registerDevice(localHomeId):
   }
   homeId = localHomeId
   registered = True
-  
+
   with open('data.pickle', 'wb') as f:
     pickle.dump(data, f)
 
@@ -81,4 +88,4 @@ def registerDevice(localHomeId):
 
 
 if __name__ == "__main__":
-  app.run(hostname, port=5001, debug=True)
+  app.run(hostname, port=5001, debug=False)
