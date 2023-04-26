@@ -18,6 +18,7 @@ except:
     'homeId': None,
     'registered': False,
   }
+
   homeId = None
   registered = False
 
